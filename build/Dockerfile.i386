@@ -1,16 +1,17 @@
-FROM i386/alpine as builder
+FROM i386/alpine:3.23 as builder
+
 RUN apk add --no-cache gcc musl-dev pcre-dev
 COPY ./simple_logger.c /src/
 WORKDIR /src
 RUN gcc -o simple_logger simple_logger.c /usr/lib/libpcre.a -static
 
-FROM --platform=386 i386/alpine
+FROM --platform=386 i386/alpine:3.23
 
 ARG CONTAINER_MAJOR_VERSION=1
-ARG CONTAINER_MINOR_VERSION=1
-ARG CONTAINER_PATCH=1
+ARG CONTAINER_MINOR_VERSION=2
+ARG CONTAINER_PATCH=0
 
-ARG S6_OVERLAY_VERSION=3.1.6.2
+ARG S6_OVERLAY_VERSION=3.2.2.0
 ARG ARCH=x86_64
 
 ENV \
@@ -41,7 +42,7 @@ ENV \
   TZ=""
 
 RUN apk add --no-cache \ 
-  	'wine' \
+  'wine' \
 	'xvfb-run' \
 	'findutils' \
 	'shadow' \
@@ -61,8 +62,8 @@ RUN apk add --no-cache \
 	mkdir -m 760 /container && \
 	addgroup --gid $PGID wine && \
 	adduser --uid $PUID --home /container --disabled-password --no-create-home --shell /bin/false --ingroup wine wine && \
-        touch /container/.CONTAINER_VERSION && \
-        echo "${CONTAINER_MAJOR_VERSION}.${CONTAINER_MINOR_VERSION}.${CONTAINER_PATCH}" > /container/.CONTAINER_VERSION && \
+  touch /container/.CONTAINER_VERSION && \
+  echo "${CONTAINER_MAJOR_VERSION}.${CONTAINER_MINOR_VERSION}.${CONTAINER_PATCH}" > /container/.CONTAINER_VERSION && \
 	chown -R wine:wine /container
 
 WORKDIR /container/swat4
@@ -74,9 +75,9 @@ EXPOSE 10480-10483/udp
 
 ENTRYPOINT [ "/init" ]
 LABEL \
-  org.opencontainers.image.authors="Kevin Moore" \
+  org.opencontainers.image.authors="Kevin Moore, Francisco Zadikian" \
   org.opencontainers.image.title="SWAT 4 Docker" \
   org.opencontainers.image.description="Docker container for running a SWAT 4 Dedicated Server" \
-  org.opencontainers.image.source=https://github.com/MisterCalvin/swat4-server-docker \
+  org.opencontainers.image.source=https://github.com/fzadikian/swat4-server-docker \
   org.opencontainers.image.version="${CONTAINER_MAJOR_VERSION}.${CONTAINER_MINOR_VERSION}.${CONTAINER_PATCH}" \
   org.opencontainers.image.licenses=MIT

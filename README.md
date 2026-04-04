@@ -15,7 +15,7 @@ The container is built with the Master Server Patches necessary for listing your
 ```
 services: 
   swat4-server-docker: 
-    image: ghcr.io/mistercalvin/swat4-server-docker:latest
+    image: ghcr.io/fzadikian/swat4-server-docker:latest
     container_name: swat4-server-docker
     environment: 
       TZ: America/New_York

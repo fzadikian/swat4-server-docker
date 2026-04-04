@@ -1,6 +1,6 @@
 services: 
   swat4-server-docker: 
-    image: ghcr.io/mistercalvin/swat4-server-docker:latest 
+    image: ghcr.io/fzadikian/swat4-server-docker:latest 
     container_name: swat4-server-docker
     environment: 
       PUID: 1000 # Optional: Set the UID for the user inside the container; Default: 1000
