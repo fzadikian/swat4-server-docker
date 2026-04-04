@@ -1,9 +1,9 @@
 FROM i386/alpine:3.23 as builder
 
-RUN apk add --no-cache gcc musl-dev pcre-dev
+RUN apk add --no-cache gcc musl-dev pcre-dev pcre-static
 COPY ./simple_logger.c /src/
 WORKDIR /src
-RUN gcc -o simple_logger simple_logger.c /usr/lib/libpcre.a -static
+RUN gcc -o simple_logger simple_logger.c -static -lpcre
 
 FROM --platform=386 i386/alpine:3.23
 
